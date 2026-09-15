@@ -1,9 +1,12 @@
 import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { colors } from '../Styles/colors';
-import { spacing } from '../Styles/spacing';
+import { colors } from '../Components/Styles/colors';
+import { spacing } from '../Components/Styles/spacing';
+import { useRouter } from 'expo-router';
 
 
-export function LoginPage(){
+export default function LoginPage(){
+
+    const router = useRouter();
 
     return(
             <View style={styles.container}>
@@ -44,7 +47,7 @@ export function LoginPage(){
                         </TouchableOpacity>
                     </View>
 
-                    <TouchableOpacity activeOpacity={0.7} style={styles.createAccountButton}>
+                    <TouchableOpacity activeOpacity={0.7} style={styles.createAccountButton} onPress={() => router.push('/signup')}>
                         <Text style={styles.createAccountText}>New to Crownlytics? Create account</Text>
                     </TouchableOpacity>
                 </View>

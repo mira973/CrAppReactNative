@@ -1,8 +1,11 @@
 import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
-import { colors } from '../Styles/colors';
-import { spacing } from '../Styles/spacing';
+import { colors } from '../Components/Styles/colors';
+import { spacing } from '../Components/Styles/spacing';
+import { useRouter } from 'expo-router';
 
-export function SignUpPage() {
+export default function SignUpPage() {
+const router = useRouter();
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.content}>
@@ -64,7 +67,7 @@ export function SignUpPage() {
                     By creating an account, you agree to our Terms and Privacy Policy.
                 </Text>
 
-                <TouchableOpacity activeOpacity={0.7} style={styles.loginLinkButton}>
+                <TouchableOpacity activeOpacity={0.7} style={styles.loginLinkButton} onPress={() => router.push('/LogInPage')}>
                     <Text style={styles.loginLinkText}>Already have an account? Log in</Text>
                 </TouchableOpacity>
             </View>

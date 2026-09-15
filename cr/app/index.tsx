@@ -1,8 +1,11 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
-import { colors } from '../Styles/colors';
-import { spacing } from '../Styles/spacing';
+import { colors } from '../Components/Styles/colors';
+import { spacing } from '../Components/Styles/spacing';
+import { useRouter } from 'expo-router';
 
-export function WelcomeScreen() {
+export default function WelcomeScreen() {
+
+    const router = useRouter();
     return (
         <View style={styles.welcomeContainer}>
             <Text style={styles.welcomeHeaderText}>Crownlytics</Text>
@@ -15,10 +18,10 @@ export function WelcomeScreen() {
             </View>
 
             <View style={styles.actions}>
-                <TouchableOpacity style={styles.primaryButton} activeOpacity={0.8}>
+                <TouchableOpacity style={styles.primaryButton} activeOpacity={0.8} onPress={() => router.push('/LogInPage')}>
                     <Text style={styles.primaryButtonText}>Log in</Text>
                 </TouchableOpacity>
-                <TouchableOpacity style={styles.secondaryButton} activeOpacity={0.8}>
+                <TouchableOpacity style={styles.secondaryButton} activeOpacity={0.8} onPress={() => router.push('/signup')}>
                     <Text style={styles.secondaryButtonText}>Sign up</Text>
                 </TouchableOpacity>
             </View>
