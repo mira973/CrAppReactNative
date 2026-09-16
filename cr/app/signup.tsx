@@ -1,14 +1,35 @@
-import { SafeAreaView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { colors } from '../Components/Styles/colors';
 import { spacing } from '../Components/Styles/spacing';
 import { useRouter } from 'expo-router';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { SignUpFormData, signUpShema } from '../validation/signUpSchema';
 
 export default function SignUpPage() {
-const router = useRouter();
+    const router = useRouter();
+    const { control, handleSubmit } = useForm<SignUpFormData>({
+        resolver: zodResolver(signUpShema),
+        defaultValues: {
+            username: '',
+            email: '',
+            password: '',
+            confirmPassword: '',
+        },
+    });
+
+    const onSubmit = (data: SignUpFormData) => {
+        console.log(data);
+    };
 
     return (
         <SafeAreaView style={styles.container}>
-            <View style={styles.content}>
+            <ScrollView
+                contentContainerStyle={styles.scrollContent}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                <View style={styles.content}>
                 <View style={styles.header}>
                     <Text style={styles.title}>Create your account</Text>
                     <Text style={styles.subtitle}>
@@ -19,46 +40,94 @@ const router = useRouter();
                 <View style={styles.form}>
                     <View style={styles.field}>
                         <Text style={styles.label}>Username</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            placeholder="Enter your nickname"
-                            placeholderTextColor={colors.placeholder}
-                            style={styles.input}
+                        <Controller
+                            control={control}
+                            name="username"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <>
+                                    <TextInput
+                                        autoCapitalize="none"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        placeholder="Enter your nickname"
+                                        placeholderTextColor={colors.placeholder}
+                                        style={styles.input}
+                                        value={value}
+                                    />
+                                    {error && <Text style={styles.error}>{error.message}</Text>}
+                                </>
+                            )}
                         />
                     </View>
 
                     <View style={styles.field}>
                         <Text style={styles.label}>Email</Text>
-                        <TextInput
-                            autoCapitalize="none"
-                            keyboardType="email-address"
-                            placeholder="Enter your email"
-                            placeholderTextColor={colors.placeholder}
-                            style={styles.input}
+                        <Controller
+                            control={control}
+                            name="email"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <>
+                                    <TextInput
+                                        autoCapitalize="none"
+                                        keyboardType="email-address"
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        placeholder="Enter your email"
+                                        placeholderTextColor={colors.placeholder}
+                                        style={styles.input}
+                                        value={value}
+                                    />
+                                    {error && <Text style={styles.error}>{error.message}</Text>}
+                                </>
+                            )}
                         />
                     </View>
 
                     <View style={styles.field}>
                         <Text style={styles.label}>Password</Text>
-                        <TextInput
-                            placeholder="Enter your password"
-                            placeholderTextColor={colors.placeholder}
-                            secureTextEntry
-                            style={styles.input}
+                        <Controller
+                            control={control}
+                            name="password"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <>
+                                    <TextInput
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        placeholder="Enter your password"
+                                        placeholderTextColor={colors.placeholder}
+                                        secureTextEntry
+                                        style={styles.input}
+                                        value={value}
+                                    />
+                                    {error && <Text style={styles.error}>{error.message}</Text>}
+                                </>
+                            )}
                         />
                     </View>
 
                     <View style={styles.field}>
                         <Text style={styles.label}>Confirm password</Text>
-                        <TextInput
-                            placeholder="Repeat your password"
-                            placeholderTextColor={colors.placeholder}
-                            secureTextEntry
-                            style={styles.input}
+                        <Controller
+                            control={control}
+                            name="confirmPassword"
+                            render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                <>
+                                    <TextInput
+                                        onBlur={onBlur}
+                                        onChangeText={onChange}
+                                        placeholder="Repeat your password"
+                                        placeholderTextColor={colors.placeholder}
+                                        secureTextEntry
+                                        style={styles.input}
+                                        value={value}
+                                    />
+                                    {error && <Text style={styles.error}>{error.message}</Text>}
+                                </>
+                            )}
                         />
                     </View>
 
-                    <TouchableOpacity activeOpacity={0.8} style={styles.createAccountButton}>
+                    <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit(onSubmit)} style={styles.createAccountButton}>
                         <Text style={styles.createAccountButtonText}>Create account</Text>
                     </TouchableOpacity>
                 </View>
@@ -70,7 +139,8 @@ const router = useRouter();
                 <TouchableOpacity activeOpacity={0.7} style={styles.loginLinkButton} onPress={() => router.push('/LogInPage')}>
                     <Text style={styles.loginLinkText}>Already have an account? Log in</Text>
                 </TouchableOpacity>
-            </View>
+                </View>
+            </ScrollView>
         </SafeAreaView>
     );
 }
@@ -80,12 +150,13 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: colors.background,
         paddingHorizontal: spacing.screen,
+    },
+    scrollContent: {
+        flexGrow: 1,
         paddingVertical: spacing.section,
     },
     content: {
-        flex: 1,
         alignSelf: 'center',
-        justifyContent: 'center',
         maxWidth: spacing.formMaxWidth,
         width: '100%',
     },
@@ -116,6 +187,10 @@ const styles = StyleSheet.create({
         color: colors.text,
         fontSize: 14,
         fontWeight: '600',
+    },
+    error: {
+        color: '#D14343',
+        fontSize: 13,
     },
     input: {
         backgroundColor: colors.surface,
