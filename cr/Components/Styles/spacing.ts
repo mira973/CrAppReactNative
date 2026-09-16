@@ -1,6 +1,9 @@
 export const spacing = {
     screen: 24,
     section: 32,
+    headerGap: 16,
+    cardGap: 16,
+    cardPadding: 20,
     button: 12,
     contentGap: 12,
     fieldGap: 18,

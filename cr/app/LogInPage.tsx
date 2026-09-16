@@ -19,7 +19,8 @@ export default function LoginPage(){
     });
 
     const onSubmit = (data: LoginFormData) => {
-        console.log(data);
+        console.log(data),
+        router.replace('/home')
     };
 
     return(
