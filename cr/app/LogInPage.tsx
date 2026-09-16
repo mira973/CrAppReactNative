@@ -2,11 +2,25 @@ import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-nativ
 import { colors } from '../Components/Styles/colors';
 import { spacing } from '../Components/Styles/spacing';
 import { useRouter } from 'expo-router';
+import { Controller, useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { LoginFormData, loginSchema } from '../validation/loginSchema';
 
 
 export default function LoginPage(){
 
     const router = useRouter();
+    const { control, handleSubmit } = useForm<LoginFormData>({
+        resolver: zodResolver(loginSchema),
+        defaultValues: {
+            email: '',
+            password: '',
+        },
+    });
+
+    const onSubmit = (data: LoginFormData) => {
+        console.log(data);
+    };
 
     return(
             <View style={styles.container}>
@@ -19,22 +33,46 @@ export default function LoginPage(){
                     <View style={styles.form}>
                         <View style={styles.field}>
                             <Text style={styles.label}>Email</Text>
-                            <TextInput
-                                autoCapitalize="none"
-                                keyboardType="email-address"
-                                placeholder="Enter your email"
-                                placeholderTextColor={colors.placeholder}
-                                style={styles.input}
+                            <Controller
+                                control={control}
+                                name="email"
+                                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                    <>
+                                        <TextInput
+                                            autoCapitalize="none"
+                                            keyboardType="email-address"
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your email"
+                                            placeholderTextColor={colors.placeholder}
+                                            style={styles.input}
+                                            value={value}
+                                        />
+                                        {error && <Text style={styles.error}>{error.message}</Text>}
+                                    </>
+                                )}
                             />
                         </View>
 
                         <View style={styles.field}>
                             <Text style={styles.label}>Password</Text>
-                            <TextInput
-                                placeholder="Enter your password"
-                                placeholderTextColor={colors.placeholder}
-                                secureTextEntry
-                                style={styles.input}
+                            <Controller
+                                control={control}
+                                name="password"
+                                render={({ field: { onChange, onBlur, value }, fieldState: { error } }) => (
+                                    <>
+                                        <TextInput
+                                            onBlur={onBlur}
+                                            onChangeText={onChange}
+                                            placeholder="Enter your password"
+                                            placeholderTextColor={colors.placeholder}
+                                            secureTextEntry
+                                            style={styles.input}
+                                            value={value}
+                                        />
+                                        {error && <Text style={styles.error}>{error.message}</Text>}
+                                    </>
+                                )}
                             />
                         </View>
 
@@ -42,7 +80,7 @@ export default function LoginPage(){
                             <Text style={styles.forgotText}>Forgot password?</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity activeOpacity={0.8} style={styles.loginButton}>
+                        <TouchableOpacity activeOpacity={0.8} onPress={handleSubmit(onSubmit)} style={styles.loginButton}>
                             <Text style={styles.loginButtonText}>Log in</Text>
                         </TouchableOpacity>
                     </View>
@@ -96,6 +134,10 @@ export default function LoginPage(){
             color: colors.text,
             fontSize: 14,
             fontWeight: '600',
+        },
+        error: {
+            color: '#D14343',
+            fontSize: 13,
         },
         input: {
             backgroundColor: colors.surface,
